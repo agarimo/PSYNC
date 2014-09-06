@@ -1,6 +1,5 @@
 package main.entidades;
 
-
 /**
  *
  * @author Agárimo
@@ -9,6 +8,10 @@ public class Descripcion {
 
     private int id;
     private String descripcion;
+
+    public Descripcion() {
+
+    }
 
     public Descripcion(int id) {
         this.id = id;
@@ -59,10 +62,10 @@ public class Descripcion {
         return query;
     }
 
-    public String updateDescription(){
+    public String updateDescription() {
         String query = "UPDATE admin_electropresta.EM_product_lang SET "
-                + "description="+util.Varios.entrecomillar(this.descripcion)+" "
-                + "WHERE id_product="+this.id+" AND id_lang=1";
+                + "description=" + util.Varios.entrecomillar(this.descripcion) + " "
+                + "WHERE id_product=" + this.id + " AND id_lang=1";
         return query;
     }
 }

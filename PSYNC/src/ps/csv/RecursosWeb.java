@@ -75,14 +75,14 @@ public class RecursosWeb {
 
         switch (tipo) {
             case 0:
-                list = SqlPs.listaProductoFinal("SELECT * FROM electromegusta.producto_final");
+                list = SqlPs.listaProducto("SELECT * FROM electromegusta.producto_final");
                 break;
             case 1:
-                list = SqlPs.listaProductoFinal("SELECT * FROM electromegusta.producto_final where id_producto not in(select id_descripcion from electromegusta.descripcion)");
+                list = SqlPs.listaProducto("SELECT * FROM electromegusta.producto_final where id_producto not in(select id_descripcion from electromegusta.descripcion)");
                 break;
 
             case 2:
-                list = SqlPs.listaProductoFinal("SELECT * FROM electromegusta.producto_final where id_producto not in(select id_producto from electromegusta.imagen)");
+                list = SqlPs.listaProducto("SELECT * FROM electromegusta.producto_final where id_producto not in(select id_producto from electromegusta.imagen)");
                 break;
         }
 
@@ -114,7 +114,7 @@ public class RecursosWeb {
             int contador = 1;
             Iterator it = list.iterator();
 
-            bd = new Sql(Main.conEmg);
+            bd = new Sql(Main.conPSync);
             while (it.hasNext()) {
                 aux = (Producto) it.next();
                 recargaImagen(aux.getId());
@@ -151,7 +151,7 @@ public class RecursosWeb {
         File file;
         Iterator it = list.iterator();
 
-        bd = new Sql(Main.conEmg);
+        bd = new Sql(Main.conPSync);
         while (it.hasNext()) {
             aux = (Producto) it.next();
             file = buscaArchivoTexto(Integer.toString(aux.getId()));
@@ -279,7 +279,7 @@ public class RecursosWeb {
         Producto aux;
         Iterator it = list.iterator();
 
-        bd = new Sql(Main.conEmg);
+        bd = new Sql(Main.conPSync);
         while (it.hasNext()) {
             aux = (Producto) it.next();
 

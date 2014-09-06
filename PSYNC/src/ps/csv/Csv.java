@@ -65,7 +65,6 @@ public class Csv implements Runnable {
                 Inicio.log.escribeError("IOException", ex.getMessage());
             }
         }
-        list.remove(0);
     }
 
     protected void cargaListPublicado() {

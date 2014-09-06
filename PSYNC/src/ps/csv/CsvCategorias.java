@@ -14,6 +14,8 @@ import util.Varios;
  * @author Agárimo
  */
 public class CsvCategorias extends Csv {
+    
+    private int modo;
 
     public CsvCategorias(File archivo, Conexion con) {
         super(archivo, con);
@@ -64,10 +66,8 @@ public class CsvCategorias extends Csv {
 
         if (id < 1) {
             logCategoria.escribeMsg("Nueva Categoria: " + aux.getNombre());
+            System.out.println(aux.SQLCrear());
             bd.ejecutar(aux.SQLCrear());
-        }else{
-            logCategoria.escribeMsg("Categoria Modificada: " + aux.getNombre());
-            bd.ejecutar((aux.SQLEditar()));
         }
     }
 }

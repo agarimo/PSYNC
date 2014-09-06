@@ -1,13 +1,13 @@
 package ps.csv;
 
-import main.entidades.Producto;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Iterator;
 import main.Inicio;
+import main.Log;
+import main.entidades.Descripcion;
+import main.entidades.Producto;
 import util.Conexion;
-import main.SqlPs;
-import util.Dates;
 import util.Varios;
 
 /**
@@ -19,18 +19,18 @@ public class CsvProductos extends Csv {
     public CsvProductos(File archivo, Conexion con) {
         super(archivo, con);
         super.cargar();
+        logProducto=new Log("PRODUCTOS");
     }
 
     @Override
     public void run() {
         super.conectar();
-        cargaListPublicado();
         procesar();
         super.desconectar();
     }
 
     private void procesar() {
-        System.out.println("Iniciando actualizacion de stock");
+        System.out.println("Iniciando actualizacion de PRODUCTOS");
         int contador = 1;
         String str;
         Iterator it = super.list.iterator();
@@ -49,35 +49,43 @@ public class CsvProductos extends Csv {
         System.out.println();
     }
 
-    @Override
-    protected void cargaListPublicado() {
-        this.listPublicado = SqlPs.listaProductoFinal("SELECT * FROM electromegusta.producto_final WHERE id_proveedor=3");
-    }
-
     private void split(String str) throws SQLException {
-        String[] split = str.split("\t");
-
+        String[] split = str.split(";");
+        int aux;
         Producto pf = new Producto();
-//        pf.setIdProveedor(3);
-//        pf.setReferenciaProveedor(split[0].trim());
-//        ip.setStock(Integer.parseInt(split[1].trim()));
-
-        compruebaProducto(pf);
-    }
-
-    private void compruebaProducto(Producto pf) throws SQLException {
-        Producto aux = buscarEnList(pf);
-        if (aux != null) {
-            actualizaStock(aux.getId());
-//            actualizaStockPresta(aux);
+        Descripcion ds = new Descripcion();
+        
+        pf.setId(Integer.parseInt(split[0]));
+        pf.setNombre(split[1].trim());
+        pf.setIdCategoria(Integer.parseInt(split[3]));
+        pf.setStock(Integer.parseInt(split[4]));
+        pf.setPrecio(Double.parseDouble(split[5].replace(",", ".").trim()));
+        aux=Integer.parseInt(split[6]);
+        if(aux==0){
+            pf.setActivo(false);
+        }else{
+            pf.setActivo(true);
         }
+        
+        ds.setId(Integer.parseInt(split[0]));
+        ds.setDescripcion(split[2].trim());
+        
+        creaProducto(pf);
+        creaDescripcion(ds);
     }
 
-    private void actualizaStock(int id) throws SQLException {
-        String query = "UPDATE electromegusta.info_producto SET "
-//                + "stock=" + this.ip.getStock() + ","
-                + "update_stock=" + Varios.entrecomillar(Dates.imprimeFechaCompleta(Dates.curdate())) + " "
-                + "WHERE id_info=" + id;
-        bd.ejecutar(query);
+    private void creaProducto(Producto pf) throws SQLException {
+        int id = bd.buscar(pf.SQLBuscarId());
+
+        if (id < 1) {
+            logProducto.escribeMsg("Nuevo Producto: " + pf.getNombre());
+            System.out.println(pf.SQLCrear());
+            bd.ejecutar(pf.SQLCrear());
+            bd.ejecutar(pf.SQLCreaPendiente());
+        } 
+    }
+    
+    private void creaDescripcion(Descripcion ds) throws SQLException{
+        bd.ejecutar(ds.SQLCrear());
     }
 }

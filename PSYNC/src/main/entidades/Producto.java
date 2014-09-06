@@ -128,7 +128,7 @@ public class Producto {
     }
 
     public String SQLCrear() {
-        String query = "INSERT INTO psync.producto (id,id_categoria,nombre,activo,stock,precio) values("
+        String query = "INSERT INTO psync.producto (id,id_categoria,nombre,activo,stock,precio,update_precio,update_stock) values("
                 + this.id + ","
                 + this.idCategoria + ","
                 + util.Varios.entrecomillar(this.nombre) + ","

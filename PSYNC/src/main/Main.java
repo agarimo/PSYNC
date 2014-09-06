@@ -12,7 +12,7 @@ import util.Conexion;
  */
 public class Main {
 
-    public static Conexion conEmg;
+    public static Conexion conPSync;
     public static Conexion conPresta;
     public static boolean isLinux;
 
@@ -41,8 +41,8 @@ public class Main {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        conEmg = new Conexion("nombre", "electromegusta.es", "3306", "agarimo", "IkuinenK@@m.s84");
-        conPresta = new Conexion("nombre", "electromegusta.es", "3306", "appLogin", "IkuinenK@@m.s84");
+        conPSync = new Conexion("PSYNC", "actron.es", "3306", "appLogin", "IkuinenK@@m.s84");
+        conPresta = new Conexion("PRESTASHOP", "actron.es", "3306", "prestashop", "oY#7m2s5");
     }
 
     private static void keyStore() throws IOException {

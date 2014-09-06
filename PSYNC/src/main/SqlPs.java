@@ -28,10 +28,10 @@ public class SqlPs {
      * @param tipo
      * @return
      */
-    public static Producto cargaProductoFinal(Producto producto, int tipo) {
+    public static Producto cargaProducto(Producto producto, int tipo) {
         Producto aux = null;
         try {
-            bd = new Sql(Main.conEmg);
+            bd = new Sql(Main.conPSync);
             switch (tipo) {
                 case 0:
                     rs = bd.ejecutarQueryRs(producto.SQLBuscarId());
@@ -42,7 +42,7 @@ public class SqlPs {
             }
 
             if (rs.next()) {
-                aux = new Producto(rs.getInt("id_producto"), rs.getInt("id_categoria"), rs.getString("nombre_producto"),
+                aux = new Producto(rs.getInt("id"), rs.getInt("id_categoria"), rs.getString("nombre"),
                         rs.getBoolean("activo"),rs.getInt("stock"),rs.getDouble("precio"));
             }
             rs.close();
@@ -58,12 +58,12 @@ public class SqlPs {
     public static FTPProveedor cargaFTPProveedor(FTPProveedor server) {
         FTPProveedor aux = null;
         try {
-            bd = new Sql(Main.conEmg);
+            bd = new Sql(Main.conPSync);
             rs = bd.ejecutarQueryRs(server.SQLBuscar());
 
             if (rs.next()) {
-                aux = new FTPProveedor(rs.getInt("id_ftp_proveedor"), rs.getString("nombre_ftp"), rs.getString("login_ftp"), rs.getString("pass_ftp"),
-                        rs.getString("host_ftp"), rs.getString("archivo_ftp"));
+                aux = new FTPProveedor(rs.getInt("id"), rs.getString("nombre"), rs.getString("login"), rs.getString("pass"),
+                        rs.getString("host"), rs.getString("archivo"));
             }
 
             rs.close();
@@ -78,11 +78,11 @@ public class SqlPs {
     public static Descripcion cargarDescripcion(Descripcion descripcion) {
         Descripcion aux = null;
         try {
-            bd = new Sql(Main.conEmg);
+            bd = new Sql(Main.conPSync);
             rs = bd.ejecutarQueryRs(descripcion.SQLBuscar());
 
             if (rs.next()) {
-                aux = new Descripcion(rs.getInt("id_descripcion"), rs.getString("descripcion"));
+                aux = new Descripcion(rs.getInt("id"), rs.getString("descripcion"));
             }
 
             rs.close();
@@ -133,7 +133,7 @@ public class SqlPs {
         int aux;
 
         try {
-            bd = new Sql(Main.conEmg);
+            bd = new Sql(Main.conPSync);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
@@ -151,16 +151,16 @@ public class SqlPs {
         return list;
     }
 
-    public static List<Producto> listaProductoFinal(String query) {
+    public static List<Producto> listaProducto(String query) {
         List<Producto> list = new ArrayList();
         Producto aux;
 
         try {
-            bd = new Sql(Main.conEmg);
+            bd = new Sql(Main.conPSync);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux = new Producto(rs.getInt("id_producto"), rs.getInt("id_categoria"), rs.getString("nombre_producto"),
+                aux = new Producto(rs.getInt("id"), rs.getInt("id_categoria"), rs.getString("nombre"),
                         rs.getBoolean("activo"),rs.getInt("stock"),rs.getDouble("precio"));
                 list.add(aux);
             }
@@ -180,11 +180,11 @@ public class SqlPs {
         Imagen aux;
 
         try {
-            bd = new Sql(Main.conEmg);
+            bd = new Sql(Main.conPSync);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux = new Imagen(rs.getInt("id_imagen"), rs.getInt("id_producto"), rs.getString("nombre_imagen"));
+                aux = new Imagen(rs.getInt("id"), rs.getInt("id_producto"), rs.getString("nombre"));
                 list.add(aux);
             }
 
@@ -202,11 +202,11 @@ public class SqlPs {
         Descripcion aux;
 
         try {
-            bd = new Sql(Main.conEmg);
+            bd = new Sql(Main.conPSync);
             rs = bd.ejecutarQueryRs(query);
 
             while (rs.next()) {
-                aux = new Descripcion(rs.getInt("id_descripcion"), rs.getString("descripcion"));
+                aux = new Descripcion(rs.getInt("id"), rs.getString("descripcion"));
                 list.add(aux);
             }
 

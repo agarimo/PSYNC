@@ -47,16 +47,16 @@ public class CsvInsercion {
             System.out.print("\rGenerando " + Varios.calculaProgreso(contador, list.size()) + "%");
             contador++;
         }
-        Split sp = new Split(csv, 40);
-        sp.split();
+//        Split sp = new Split(csv, 40);
+//        sp.split();
         System.out.print("\rTarea Finalizada                            ");
         System.out.println();
     }
 
     private void cargaProductos() {
         System.out.println("Iniciando datos");
-        list = SqlPs.listaProductoFinal("SELECT * FROM electromegusta.producto_final WHERE id_producto IN "
-                + "(SELECT id_producto_final FROM electromegusta.pendiente_publicacion)");
+        list = SqlPs.listaProducto("SELECT * FROM psync.producto WHERE id IN "
+                + "(SELECT id_producto FROM psync.pendiente_insercion)");
         System.out.println("Datos cargados");
     }
 
@@ -77,35 +77,43 @@ public class CsvInsercion {
     }
 
     private void procesar(Producto pd) {
+        int a;
         String linea;
         String[] aux = new String[10];
-//        aux[0] = Integer.toString(pd.getId());
-//        aux[1] = Integer.toString(pd.getIdProveedor());
-//        aux[2] = Integer.toString(pd.getIdCategoria());
-//        aux[3] = pd.getNombre();
-//        aux[4] = pd.getReferenciaFabricante();
-//        aux[5] = pd.getReferenciaProveedor();
-//        aux[6] = Integer.toString(ip.getStock());
-//        aux[7] = new DecimalFormat("0.00").format(ip.getPrecio());
-//        aux[8] = getImagen(pd);
-//        aux[9] = getDescripcion(pd).trim().replace("\r", "").replace(";", "");
-////        aux[9] = "DESCRIPCION".trim().replace("\r", "").replace(";", "");
+        aux[0] = Integer.toString(pd.getId());
+        aux[1] = "2";
+        
+        a=pd.getIdCategoria();
+        if(a==1){
+            aux[2] = Integer.toString(100);
+        }
+        if(a==2){
+            aux[2] = Integer.toString(200);
+        }
+        
+        aux[3] = pd.getNombre();
+        aux[4] = Integer.toString(pd.getId());
+        aux[5] = Integer.toString(pd.getId());
+        aux[6] = Integer.toString(pd.getStock());
+        aux[7] = new DecimalFormat("0.00000").format(pd.getPrecio());
+        aux[8] = getImagen(pd);
+        aux[9] = getDescripcion(pd).trim().replace("\r", "").replace(";", "");
 
         linea = buildLinea(aux);
         escribeLinea(linea);
-        borraPendiente(pd.getId());
+//        borraPendiente(pd.getId());
     }
 
     private void borraPendiente(int idProducto) {
         try {
-            Sql bd = new Sql(Main.conEmg);
-            bd.ejecutar("DELETE FROM electromegusta.pendiente_publicacion WHERE id_producto_final=" + idProducto);
+            Sql bd = new Sql(Main.conPSync);
+            bd.ejecutar("DELETE FROM psync.pendiente_insercion WHERE id_producto=" + idProducto);
             bd.close();
         } catch (SQLException ex) {
             Inicio.log.escribeError("SQLException", ex.getMessage());
         }
     }
-    
+
     private String getDescripcion(Producto pf) {
         Descripcion de = SqlPs.cargarDescripcion(new Descripcion(pf.getId()));
         if (de == null) {
@@ -120,7 +128,7 @@ public class CsvInsercion {
         Imagen imagen;
         List<Imagen> lista;
         Iterator it;
-        lista = SqlPs.listarImagenes("SELECT * FROM electromegusta.imagen WHERE id_producto=" + pf.getId());
+        lista = SqlPs.listarImagenes("SELECT * FROM psync.imagen WHERE id_producto=" + pf.getId());
         it = lista.iterator();
 
         while (it.hasNext()) {
@@ -137,8 +145,8 @@ public class CsvInsercion {
     private String buildLinea(String[] aux) {
         String str = "";
 
-        for (int i = 0; i < aux.length; i++) {
-            str = str + aux[i] + ";";
+        for (String aux1 : aux) {
+            str = str + aux1 + ";";
         }
 
         return str.substring(0, str.length() - 1);

@@ -117,7 +117,7 @@ public class FTPProveedor implements Serializable {
     }
 
     public String SQLCrear() {
-        String query = "INSERT into electromegusta.ftp_proveedor (nombre_ftp,login_ftp,pass_ftp,host_ftp,archivo_ftp) values("
+        String query = "INSERT into psync.ftp (nombre,login,pass,host,archivo) values("
                 + util.Varios.entrecomillar(this.nombre) + ","
                 + util.Varios.entrecomillar(this.login) + ","
                 + util.Varios.entrecomillar(this.pass) + ","
@@ -128,27 +128,27 @@ public class FTPProveedor implements Serializable {
     }
 
     public String SQLBorrar() {
-        String query = "DELETE from electromegusta.ftp_proveedor WHERE id_ftp_proveedor=" + this.id;
+        String query = "DELETE from psync.ftp WHERE id=" + this.id;
         return query;
     }
 
     public String SQLEditar() {
-        String query = "UPDATE electromegusta.ftp_proveedor SET "
-                + "login_ftp=" + util.Varios.entrecomillar(this.login) + ","
-                + "pass_ftp=" + util.Varios.entrecomillar(this.pass) + ","
-                + "archivo_ftp=" + util.Varios.entrecomillar(this.archivo) + ","
-                + "host_ftp=" + util.Varios.entrecomillar(this.host) + " "
-                + "WHERE id_ftp_proveedor=" + this.id;
+        String query = "UPDATE psync.ftp SET "
+                + "login=" + util.Varios.entrecomillar(this.login) + ","
+                + "pass=" + util.Varios.entrecomillar(this.pass) + ","
+                + "archivo=" + util.Varios.entrecomillar(this.archivo) + ","
+                + "host=" + util.Varios.entrecomillar(this.host) + " "
+                + "WHERE id=" + this.id;
         return query;
     }
 
     public String SQLBuscar() {
-        String query = "SELECT * FROM electromegusta.ftp_proveedor WHERE nombre_ftp="+util.Varios.entrecomillar(this.nombre);
+        String query = "SELECT * FROM psync.ftp WHERE nombre="+util.Varios.entrecomillar(this.nombre);
         return query;
     }
 
     public String SQLBuscarId() {
-        String query = "SELECT * FROM electromegusta.ftp_proveedor WHERE id_ftp_proveedor="+this.id;
+        String query = "SELECT * FROM psync.ftp WHERE id="+this.id;
         return query;
     }
 }
