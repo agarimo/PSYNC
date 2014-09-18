@@ -47,7 +47,7 @@ public class CsvInsercion {
             System.out.print("\rGenerando " + Varios.calculaProgreso(contador, list.size()) + "%");
             contador++;
         }
-//        Split sp = new Split(csv, 40);
+//        Split sp = new Split(csv, 10000);
 //        sp.split();
         System.out.print("\rTarea Finalizada                            ");
         System.out.println();
@@ -84,12 +84,10 @@ public class CsvInsercion {
         aux[1] = "2";
         
         a=pd.getIdCategoria();
-        if(a==1){
-            aux[2] = Integer.toString(100);
+        if(a==1 || a==2){
+            a=a+100;
         }
-        if(a==2){
-            aux[2] = Integer.toString(200);
-        }
+        aux[2] = Integer.toString(a);
         
         aux[3] = pd.getNombre();
         aux[4] = Integer.toString(pd.getId());
