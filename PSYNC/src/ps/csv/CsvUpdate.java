@@ -7,7 +7,6 @@ import java.util.Iterator;
 import main.Inicio;
 import util.Conexion;
 import main.SqlPs;
-import util.Dates;
 import util.Varios;
 
 /**
@@ -15,6 +14,8 @@ import util.Varios;
  * @author Agarimo
  */
 public class CsvUpdate extends Csv {
+    
+    Producto pf;
 
     public CsvUpdate(File archivo, Conexion con) {
         super(archivo, con);
@@ -51,36 +52,28 @@ public class CsvUpdate extends Csv {
 
     @Override
     protected void cargaListPublicado() {
-        this.listPublicado = SqlPs.listaProducto("SELECT * FROM electromegusta.producto_final WHERE id_proveedor=3");
+        this.listPublicado = SqlPs.listaProducto("SELECT * FROM psync.producto");
     }
 
     private void split(String str) throws SQLException {
-        Producto pf;
         String[] split = str.split(";");
 
         pf = new Producto();
-//            pf.setIdProveedor(3);
-//            pf.setReferenciaProveedor(split[3].trim());
-//            pf.setReferenciaFabricante(split[4].trim());
-//            pf.setNombre(split[7].trim().replace("'", "´"));
-//            ip.setPrecio(Double.parseDouble(split[8].trim()));
+        pf.setId(Integer.parseInt(split[0]));
+        pf.setStock(Integer.parseInt(split[1]));
+        pf.setPrecio(Double.parseDouble(split[2]));
 
-        compruebaProducto(pf);
+        updateProducto(pf);
     }
 
-    private void compruebaProducto(Producto pf) throws SQLException {
+    private void updateProducto(Producto pf) throws SQLException {
         Producto aux = buscarEnList(pf);
         if (aux != null) {
-            actualizaTarifa(aux.getId());
-//            actualizaTarifaPresta(aux);
+            if(!aux.equals(pf)){
+                bd.ejecutar(pf.SQLUpdate());
+                bd.ejecutar(pf.updatePrice());
+                bd.ejecutar(pf.updateStock());
+            }
         }
-    }
-
-    private void actualizaTarifa(int id) throws SQLException {
-        String query = "UPDATE electromegusta.info_producto SET "
-                //                + "precio=" + this.ip.getPrecio() + ","
-                + "update_precio=" + Varios.entrecomillar(Dates.imprimeFechaCompleta(Dates.curdate())) + " "
-                + "WHERE id_info=" + id;
-        bd.ejecutar(query);
     }
 }

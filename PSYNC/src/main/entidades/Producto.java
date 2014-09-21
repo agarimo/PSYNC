@@ -100,9 +100,9 @@ public class Producto {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + this.id;
-        hash = 29 * hash + this.idCategoria;
-        hash = 29 * hash + Objects.hashCode(this.nombre);
+        hash = 43 * hash + this.id;
+        hash = 43 * hash + this.stock;
+        hash = 43 * hash + (int) (Double.doubleToLongBits(this.precio) ^ (Double.doubleToLongBits(this.precio) >>> 32));
         return hash;
     }
 
@@ -118,10 +118,10 @@ public class Producto {
         if (this.id != other.id) {
             return false;
         }
-        if (this.idCategoria != other.idCategoria) {
+        if (this.stock != other.stock) {
             return false;
         }
-        if (!Objects.equals(this.nombre, other.nombre)) {
+        if (Double.doubleToLongBits(this.precio) != Double.doubleToLongBits(other.precio)) {
             return false;
         }
         return true;
@@ -153,6 +153,16 @@ public class Producto {
                 + "WHERE id=" + this.id;
         return query;
     }
+    
+    public String SQLUpdate(){
+        String query = "UPDATE psync.producto SET "
+                + "stock=" + this.stock + ","
+                + "precio=" + this.precio + ","
+                + "update_precio=" + Varios.entrecomillar(Dates.imprimeFechaCompleta(Dates.curdate())) + ","
+                + "update_stock=" + Varios.entrecomillar(Dates.imprimeFechaCompleta(Dates.curdate())) + " "
+                + "WHERE id=" + this.id;
+        return query;
+    }
 
     public String SQLCreaPendiente() {
         String query = "INSERT INTO psync.pendiente_insercion (id_producto) values(" + this.id + ")";
@@ -175,21 +185,21 @@ public class Producto {
     }
 
     public String updatePrice() {
-        String query = "UPDATE admin_electropresta.EM_product_shop SET "
+        String query = "UPDATE prestashop.ps_product_shop SET "
                 + "price=" + this.precio + " "
                 + "WHERE id_product=" + this.id;
         return query;
     }
 
     public String updateStock() {
-        String query = "UPDATE admin_electropresta.EM_stock_available SET "
+        String query = "UPDATE prestashop.ps_stock_available SET "
                 + "quantity=" + this.stock + " "
                 + "WHERE id_product=" + this.id;
         return query;
     }
 
     public String updateActivo() {
-        String query = "UPDATE admin_electropresta.EM_product_shop SET "
+        String query = "UPDATE prestashop.ps_product_shop SET "
                 + "active=" + this.isActivo + " "
                 + "where id_product=" + this.id;
         return query;
