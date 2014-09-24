@@ -22,7 +22,7 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         driverAndInit();
         
-        args = new String[]{"-insercion"};
+        args = new String[]{"-update"};
         if (args.length != 0) {
             inicio(args);
         }

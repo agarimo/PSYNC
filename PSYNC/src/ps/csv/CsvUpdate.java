@@ -61,7 +61,7 @@ public class CsvUpdate extends Csv {
         pf = new Producto();
         pf.setId(Integer.parseInt(split[0]));
         pf.setStock(Integer.parseInt(split[1]));
-        pf.setPrecio(Double.parseDouble(split[2]));
+        pf.setPrecio(Double.parseDouble(split[2].replace(",", ".").trim()));
 
         updateProducto(pf);
     }
@@ -70,9 +70,10 @@ public class CsvUpdate extends Csv {
         Producto aux = buscarEnList(pf);
         if (aux != null) {
             if(!aux.equals(pf)){
-                bd.ejecutar(pf.SQLUpdate());
-                bd.ejecutar(pf.updatePrice());
-                bd.ejecutar(pf.updateStock());
+                System.out.println("Se ejecuta update del producto "+pf.toString());
+//                bd.ejecutar(pf.SQLUpdate());
+//                bd.ejecutar(pf.updatePrice());
+//                bd.ejecutar(pf.updateStock());
             }
         }
     }

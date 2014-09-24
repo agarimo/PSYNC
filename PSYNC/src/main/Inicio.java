@@ -179,8 +179,9 @@ public class Inicio {
         getCsv(server);
     }
     
-    private void update(){
-        
+    private void update() throws IOException{
+        server = SqlPs.cargaFTPProveedor(new FTPProveedor("UPDATE"));
+        getCsv(server);
     }
     
     private void insercion(){
@@ -230,33 +231,6 @@ public class Inicio {
 //        }
 //    }
 //
-//    private void update() {
-//        System.out.println("Ejecutando UPDATE de la BBDD Prestashop");
-//        Producto aux;
-//        List<Producto> list = SqlPs.listaProductoFinal("SELECT * FROM electromegusta.producto_final");
-//        Iterator it = list.iterator();
-//        int contador = 1;
-//
-//        try {
-//            Sql bd = new Sql(Main.conPresta);
-//
-//            while (it.hasNext()) {
-//                aux = (Producto) it.next();
-//                bd.ejecutar(aux.updatePrice());
-//                bd.ejecutar(aux.updateStock());
-//                bd.ejecutar(aux.updateActivo());
-//                System.out.print("\rProcesando " + util.Varios.calculaProgreso(contador, list.size()) + "%");
-//                contador++;
-//            }
-//            System.out.print("\rActualizacion completada                            ");
-//            System.out.println();
-//            bd.close();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        SqlPs.actualizaActivos();
-//    }
-//
 //    private void getContenido(FTPProveedor server, FTPProveedor publicacion, int tipo) {
 //        RecursosWeb rw = new RecursosWeb(tipo, server, publicacion);
 //        rw.run();
@@ -279,7 +253,8 @@ public class Inicio {
                 aux.run();
                 break;
             case "UPDATE":
-                
+                aux = new CsvUpdate(file,Main.conPSync);
+                aux.run();
                 break;
         }
     }
